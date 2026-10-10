@@ -5,7 +5,7 @@ INTERVAL = 5
 .PHONY: pre-build antivirus restore
 
 pre-build:
-	mkdir -p $(MALICIOUS_DIR)
+	mkdir -p $(DIR) $(MALICIOUS_DIR)
 
 antivirus: pre-build
 	./antivirusd.sh $(DIR) $(MALICIOUS_DIR) $(INTERVAL)
