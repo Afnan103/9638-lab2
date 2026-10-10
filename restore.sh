@@ -1,9 +1,8 @@
-
 #!/bin/bash
 
 dir="$1"
 malicious_dir="$2"
-
+whitelist="whitelist.txt"
 
 if [ -z "$(find "$malicious_dir" -maxdepth 1 -type f -print -quit)" ]; then
     echo "No malicious files to review."
@@ -11,11 +10,8 @@ if [ -z "$(find "$malicious_dir" -maxdepth 1 -type f -print -quit)" ]; then
 fi
 
 while true; do
-
-    
     files=("$malicious_dir"/*)
 
-    
     if [ ! -f "${files[0]}" ]; then
         echo "No malicious files to review."
         break
@@ -51,6 +47,12 @@ while true; do
     case "$option" in
         1)
             if mv -- "$selected_file" "$dir/"; then
+                touch "$whitelist"
+
+                if ! grep -Fxq -- "$filename" "$whitelist"; then
+                    echo "$filename" >> "$whitelist"
+                fi
+
                 echo "Restored $filename to $dir."
             fi
             ;;
@@ -66,5 +68,5 @@ while true; do
             echo "Invalid option."
             ;;
     esac
-
 done
+
